@@ -4,6 +4,10 @@
         <meta charset="utf-8">
         <title>BMO Arcade</title>
         <link rel="stylesheet" href="css/juego.css">
+        <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+        <script src="js/sweetalert/sweetalert.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="js/sweetalert/sweetalert.css">
+        <link href="https://fonts.googleapis.com/css?family=Oswald:300,400,500,600,700" rel="stylesheet">
     </head>
     <body>
 
@@ -18,20 +22,20 @@
                     <li>Encontrar el orden correcto de las piezas</li>
                 </ul>
             </div>
+            <div id="contadores">
+                <p>Piezas por lado:<input id="cantidadPiezasPorLado" type="number"></p>
+                <p>Movimientos disponibles: <input id="contadorDeMovimientos" type="number" disabled></p>
+            </div>
+            <input type="radio" name="nivel" value="facil"> Fácil
+            <input type="radio" name="nivel" value="medio"> Medio
+            <input type="radio" name="nivel" value="dificil"> Dificil
+            <button id="btnInicio" class="btns">INICIAR</button>
+            <button id="btnReIniciar" class="btns">REINICIAR</button>
+            <button id="btnMezclar" class="btns">MEZCLAR</button>
         </div>
 
         <div class="col-60">
-            <div id="juego">
-                <div id="pieza1" class="pieza"><img src="images/10.jpg"></div>
-                <div id="pieza2" class="pieza"><img src="images/20.jpg"></div>
-                <div id="pieza3" class="pieza"><img src="images/30.jpg"></div>
-                <div id="pieza4" class="pieza"><img src="images/40.jpg"></div>
-                <div id="pieza5" class="pieza"><img src="images/50.jpg"></div>
-                <div id="pieza6" class="pieza"><img src="images/60.jpg"></div>
-                <div id="pieza7" class="pieza"><img src="images/70.jpg"></div>
-                <div id="pieza8" class="pieza"><img src="images/80.jpg"></div>
-                <div id="pieza9" class="pieza"></div>
-            </div>
+            <canvas id="miCanvas" width="600" height="600"></canvas>
         </div>
 
         <footer>
