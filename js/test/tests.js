@@ -6,7 +6,9 @@ describe('Creación', function() {
   describe('Juego', function() {
     it('El Objeto Juego está definido', function(done) {
       if (!window.juego){
-        done(err);
+        window.juego = new Juego(3);
+        juego.iniciar();
+        done();
       } else {
         done();
       }
@@ -49,6 +51,14 @@ describe('Creación', function() {
 
       expect(juego.filaPosicionVacia).to.be.equal(juego.cantidadDePiezasPorLado -1);
       expect(juego.columnaPosicionVacia).to.be.equal(juego.cantidadDePiezasPorLado -1);
+    })
+
+    it('La posicion vacia se actualiza', function(){
+      juego.filaPosicionVacia = 2;
+      juego.columnaPosicionVacia = 2;
+      juego.actualizarPosicionVacia(1,1);
+      expect(juego.filaPosicionVacia).to.equal(1);
+      expect(juego.columnaPosicionVacia).to.equal(1);			
     })
   });
 });

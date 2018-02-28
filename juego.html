@@ -23,15 +23,21 @@
                 </ul>
             </div>
             <div id="contadores">
-                <p>Piezas por lado:<input id="cantidadPiezasPorLado" type="number"></p>
-                <p>Movimientos disponibles: <input id="contadorDeMovimientos" type="number" disabled></p>
+                <p>Piezas por lado: <span id="cantidadPiezasPorLado"></span></p>
+                <p>Movimientos disponibles: <span id="contadorDeMovimientos"></span></p>
             </div>
-            <input type="radio" name="nivel" value="facil"> Fácil
-            <input type="radio" name="nivel" value="medio"> Medio
-            <input type="radio" name="nivel" value="dificil"> Dificil
-            <button id="btnInicio" class="btns">INICIAR</button>
-            <button id="btnReIniciar" class="btns">REINICIAR</button>
-            <button id="btnMezclar" class="btns">MEZCLAR</button>
+            <form id="config">
+                <div>
+                    <input type="radio" name="nivel" value="facil"> Fácil
+                    <input type="radio" name="nivel" value="medio"> Medio
+                    <input type="radio" name="nivel" value="dificil"> Dificil
+                </div>
+                <div>
+                    <button id="btnInicio" class="btns" type="submit" value="iniciar">Iniciar</button>
+                    <button class="btns" type="submit" value="reiniciar">Reiniciar</button>
+                    <button class="btns" type="submit" value="mezclar">Mezclar</button>
+                </div>
+            </form>
         </div>
 
         <div class="col-60">

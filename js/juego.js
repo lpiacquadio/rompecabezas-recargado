@@ -5,19 +5,19 @@ var Juego = function(cantidadDePiezasPorLado) {
         y: 0
     }
 
-    Juego.prototype.crearGrilla = function(cantidadDePiezasPorLado) {
-        var grilla = new Array(cantidadDePiezasPorLado);
+    Juego.prototype.crearGrilla = function() {
+        var grilla = new Array(this.cantidadDePiezasPorLado);
         var posicion = 1;
-        for (var fila = 0; fila < cantidadDePiezasPorLado; fila++) {
-            grilla[fila] = new Array(cantidadDePiezasPorLado);
+        for (var fila = 0; fila < this.cantidadDePiezasPorLado; fila++) {
+            grilla[fila] = new Array(this.cantidadDePiezasPorLado);
             for (var columna = 0; columna < grilla[fila].length; columna++) {
                 grilla[fila][columna] = posicion;
                 posicion++;
             }
         }
         this.grilla = grilla;
-        this.filaPosicionVacia = cantidadDePiezasPorLado - 1;
-        this.columnaPosicionVacia = cantidadDePiezasPorLado - 1;
+        this.filaPosicionVacia = this.cantidadDePiezasPorLado - 1;
+        this.columnaPosicionVacia = this.cantidadDePiezasPorLado - 1;
     }
 
     Juego.prototype.construirPiezas = function() {
@@ -161,7 +161,11 @@ var Juego = function(cantidadDePiezasPorLado) {
         this.imagen.src = "images/imagen.jpg";
     }
 
-    Juego.prototype.iniciar = function (cantMovimientos) {
+    Juego.prototype.reiniciar = function() {
+        setTimeout(this.iniciar(this.movimientosTotales), 3000);
+    }
+
+    Juego.prototype.iniciar = function(cantMovimientos) {
         this.movimientosTotales = cantMovimientos;
         this.contadorDeMovimientos = cantMovimientos;
         this.mezclando = true;
@@ -169,27 +173,16 @@ var Juego = function(cantidadDePiezasPorLado) {
         this.piezas = [];
         this.grilla = [];
 
-        var nivelDificultad = $("input[type='radio'][name='nivel']:checked").val();
-        this.configurarNivel(nivelDificultad);
+        this.maxMovimientos = cantMovimientos;
+        this.contadorDeMovimientos = this.maxMovimientos;
+        $("#contadorDeMovimientos").text(this.maxMovimientos);
 
         //se guarda el contexto en una variable para que no se pierda cuando se ejecute la funcion iniciarImagen (que va a tener otro contexto interno)
         var self = this;
 
-        $("#cantidadPiezasPorLado").val(self.cantidadDePiezasPorLado);
+        $("#cantidadPiezasPorLado").text(self.cantidadDePiezasPorLado);
 
-        $("#btnReIniciar").click(function() {
-            location.reload();
-        });
-
-        $("#btnMezclar").click(function() {
-            self.mezclando = true;  
-            self.mezclarPiezas(20);
-        });
-            
-        $("#btnInicio").val(1);
-        $("#btnInicio").delay(200).animate({value:"0"}, 2500);
-
-        this.crearGrilla(self.cantidadDePiezasPorLado);
+        this.crearGrilla();
         //se instancian los atributos que indican la posicion de las fila y columna vacias de acuerdo a la cantidad de piezas por lado para que sea la ultima del tablero
         this.filaPosicionVacia = this.cantidadDePiezasPorLado - 1;
         this.columnaPosicionVacia = this.cantidadDePiezasPorLado - 1;
@@ -214,7 +207,7 @@ var Juego = function(cantidadDePiezasPorLado) {
 
                 self.mostrarPiezaMovil();
                 self.contexto.save();
-                self.contexto.globalAlpha = $("#btnInicio").val();
+                self.contexto.globalAlpha = $("#btnInicio").val(); 
                 self.contexto.drawImage(self.piezas[0].image, 0, 0);
                 self.contexto.restore();
             },1000/30);
@@ -226,45 +219,21 @@ var Juego = function(cantidadDePiezasPorLado) {
         this.contexto.fillRect(this.piezas[this.piezas.length - 1].x, this.piezas[this.piezas.length - 1].y, this.anchoPiezas, this.altoPiezas);
     }
 
-    Juego.prototype.setContadorDeMovimientos = function (contador) {
+    Juego.prototype.setContadorDeMovimientos = function(contador) {
        this.contadorDeMovimientos = contador;
        if (!this.mezclando) {
-            $("#contadorDeMovimientos").val(this.contadorDeMovimientos);
+            $("#contadorDeMovimientos").text(this.contadorDeMovimientos);
         } else {
-            $("#contadorDeMovimientos").val(0);
+            $("#contadorDeMovimientos").text(0);
         }
     }
 
-    Juego.prototype.chequearMovimientosRestantes = function () {
+    Juego.prototype.chequearMovimientosRestantes = function() {
         if(this.contadorDeMovimientos <= 0) {
             let self = this
-            $('#contadorDeMovimientos').val(0);
+            $('#contadorDeMovimientos').text(0);
             setTimeout('mostrarCartel(false)', 10);
         }
-     }
-
-    Juego.prototype.configurarNivel = function(nivel) {
-        var piezas = 0;
-        var movimientos = 0;
-        nivel = nivel || 'facil';
-        
-        if (nivel === 'facil') {
-          piezas = 3;
-          movimientos = 30;
-        } else if(nivel === 'medio') {
-          piezas = 4;
-          movimientos = 50;
-        } else if(nivel === 'dificil') {
-          piezas = 5;
-          movimientos = 70;
-        } else {
-          piezas = Math.abs($("#cantidadPiezasPorLado").val());
-          movimientos = Math.abs($("#contadorDeMovimientos").val());
-        }
-        this.cantidadDePiezasPorLado = piezas;
-        this.maxMovimientos = movimientos;
-        this.contadorDeMovimientos = this.maxMovimientos;
-        $("#contadorDeMovimientos").val(this.maxMovimientos);
     }
     
     Juego.prototype.capturarTeclas = function() {
@@ -293,21 +262,21 @@ var Juego = function(cantidadDePiezasPorLado) {
                     x: self.piezas[self.piezas.length - 1].x,
                     y: self.piezas[self.piezas.length - 1].y,
                 }
-                if(self.mouseClicked.x > 0 && self.mouseClicked.x < self.canvas.width && self.mouseClicked.y > 0 && self.mouseClicked.y < self.canvas.height){
+                if(self.mouseClicked.x > 0 && self.mouseClicked.y > 0){
                     if(self.mouseClicked.x < piezaPos.x && self.mouseClicked.x > piezaPos.x - piezaSize && self.mouseClicked.y > piezaPos.y && self.mouseClicked.y < piezaPos.y + piezaSize){
-                        self.moverEnDireccion(39);
-                    }
-
-                    if(self.mouseClicked.x > piezaPos.x && self.mouseClicked.x < piezaPos.x + piezaSize && self.mouseClicked.y < piezaPos.y && self.mouseClicked.y > piezaPos.y - piezaSize){
-                        self.moverEnDireccion(40);
-                    }
-
-                    if(self.mouseClicked.x > piezaPos.x + piezaSize && self.mouseClicked.x < piezaPos.x + piezaSize * 2 && self.mouseClicked.y > piezaPos.y && self.mouseClicked.y < piezaPos.y + piezaSize){
                         self.moverEnDireccion(37);
                     }
 
-                    if(self.mouseClicked.x > piezaPos.x && self.mouseClicked.x < piezaPos.x + piezaSize && self.mouseClicked.y > piezaPos.y + piezaSize && self.mouseClicked.y < piezaPos.y + piezaSize * 2){
+                    if(self.mouseClicked.x > piezaPos.x && self.mouseClicked.x < piezaPos.x + piezaSize && self.mouseClicked.y < piezaPos.y && self.mouseClicked.y > piezaPos.y - piezaSize){
                         self.moverEnDireccion(38);
+                    }
+
+                    if(self.mouseClicked.x > piezaPos.x + piezaSize && self.mouseClicked.x < piezaPos.x + piezaSize * 2 && self.mouseClicked.y > piezaPos.y && self.mouseClicked.y < piezaPos.y + piezaSize){
+                        self.moverEnDireccion(39);
+                    }
+
+                    if(self.mouseClicked.x > piezaPos.x && self.mouseClicked.x < piezaPos.x + piezaSize && self.mouseClicked.y > piezaPos.y + piezaSize && self.mouseClicked.y < piezaPos.y + piezaSize * 2){
+                        self.moverEnDireccion(40);
                     }
 
                     self.chequearSiGano();
@@ -348,5 +317,45 @@ var mostrarCartel = function(gano) {
     }
 }
 
-var juego = new Juego(3);
-juego.iniciar(50);
+var juego = null;
+// var juego = new Juego(3);
+// juego.iniciar(50);
+
+$("#config button").click(function(e){
+    e.preventDefault()
+
+    var nivel = $("input[type='radio'][name='nivel']:checked").val();
+    if (!nivel) {
+        nivel = 'facil';
+        $("input[type='radio'][name='nivel']").filter('[value="facil"]').attr('checked', true);
+    }
+    var piezas = 0;
+    var movimientos = 0;
+    
+    if (nivel === 'facil') {
+      piezas = 3;
+      movimientos = 30;
+    } else if(nivel === 'medio') {
+      piezas = 4;
+      movimientos = 50;
+    } else if(nivel === 'dificil') {
+      piezas = 5;
+      movimientos = 70;
+    }
+
+    if($(this).attr("value") == "iniciar"){
+        $(this).val(1); 
+        $(this).delay(200).animate({value:"0"}, 2500); 
+        juego = new Juego(piezas)
+        juego.iniciar(movimientos)
+    } else if($(this).attr("value") == "reiniciar"){
+        if (juego) {
+            juego.reiniciar();
+        }
+    } else {
+        if (juego) {
+            juego.mezclando = true;  
+            juego.mezclarPiezas(20);
+        }
+    }
+});
